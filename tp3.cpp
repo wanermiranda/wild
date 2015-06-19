@@ -241,6 +241,7 @@ int main (int argc, const char * argv[]){
     return EXIT_SUCCESS;
 }
 /* TODO LIST
-
-
+1. Change from directory to filelist the inputs either from train or test
+2. Extract SASI as a texture descriptor
+3. Extract EOAC as a shape descriptor
 */ 
