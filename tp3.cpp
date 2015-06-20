@@ -34,6 +34,68 @@ string to_string(T value){
 }
 
 /* -------------------------------------------------------------------------------------
+ Split the line into filename and class
+ line = string containing the line data, formatted as filename#class
+ returns = 2 position vector of string, first the file and then the class
+ -------------------------------------------------------------------------------------*/
+vector<string> getFileNameClass(char *line)  {    
+    string delimiter = "#";
+    vector<string> results; 
+    size_t pos = 0;
+    std::string token;
+    while ((pos = line.find(delimiter)) != string::npos) {
+        token = line.substr(0, pos);
+        results.push_back(token)
+        line.erase(0, pos + delimiter.length());
+    }
+    return results;
+}
+
+/* -------------------------------------------------------------------------------------
+ Read the first position of the descriptor file, getting the 
+ filename = the file path for the feature vector byte set
+ returns = the feature vector size
+ -------------------------------------------------------------------------------------*/
+
+int ReadFileFeatureVector1DBinSize(char *filename) {
+    FeatureVector1D *fv=NULL;
+    int n; 
+    FILE *f;
+    if ((f = fopen(filename, "rb")) == NULL) {
+        printf("erro abrindo arquivo: %s\n", filename);
+        exit(0);
+    }
+    fread(&n,sizeof(int),1,f);
+    
+    return n;     
+}
+
+/* -------------------------------------------------------------------------------------
+ Read the feature vector from the file 
+ filename  = the file path for the feature vector byte set
+ returns = A array of double 
+ -------------------------------------------------------------------------------------*/
+
+double *ReadFileFeatureVector1DBin(char *filename) {
+    FeatureVector1D *fv=NULL;
+    int n; 
+    FILE *f;
+    if ((f = fopen(filename, "rb")) == NULL) {
+        printf("erro abrindo arquivo: %s\n", filename);
+        exit(0);
+    }
+    fread(&n,sizeof(int),1,f);
+    
+    double *fv = malloc(sizeof(double)*n);     
+
+    fv = CreateFeatureVector1D(n);
+    fread(fv,sizeof(double),n, f);
+    fclose(f);
+
+    return fv;
+}
+
+/* -------------------------------------------------------------------------------------
    Return class id based on the range of files
    The folder must contain the same number of sorted files for each class
    x         = current file number
@@ -59,6 +121,24 @@ int getClassId(int x, int num_files){
     else
         id_class = 7;  // tomato
     return id_class;
+}
+
+/* -------------------------------------------------------------------------------------
+   Build the matrix data training, configurate and performs the SVM train.
+   hist_size      = size of histogram file
+   s_trainset_file   = data for training
+   s_dir_svm     = svm result file
+   ---------------------------------------------------------------------------------- */
+void train_binary (int hist_size, string s_trainset_file, const char * s_dir_svm, double gamma){
+
+    ifstream ifs(s_trainset_file);
+
+    string line;
+
+    while(std::getline(ifs, line))
+    {
+        // do whatever you want with the line here
+    }
 }
 
 /* -------------------------------------------------------------------------------------
