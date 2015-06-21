@@ -1,5 +1,6 @@
 # Compile/Link
-G++ = g++
+G++ = g++ 
+CFLAGS= -g
 LIBS = `pkg-config opencv --libs`
 
 # App name
@@ -23,7 +24,7 @@ ARG5 =  $(DIR)train/
 #ARG5 =  $(DIR)valid/
 
 
-release : ; $(G++) $(OBJS) -o $(APPNAME) $(LIBS)
+release : ; $(G++) $(OBJS) -o $(APPNAME) $(LIBS) $(CFLAGS)
 
 clean :
 	rm -f $(APPNAME) *.o
