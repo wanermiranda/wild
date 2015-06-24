@@ -6,13 +6,13 @@ LIBS = `pkg-config opencv --libs`
 APPNAME = predict
 
 #Object
-OBJS = `pkg-config opencv --static --cflags` predict.cpp ../src/descriptors_helper.cpp
+OBJS = `pkg-config opencv --static --cflags` $(APPNAME).cpp
 
 #Parameters
-DIR = ../unser/
+DIR = ../../testes/unser/fold5/
 ARG1 =  UNSER
 ARG2 =  $(DIR)svm.xml
-ARG3 =  $(DIR)valid/001.bin
+ARG3 =  $(DIR)train/0001.bin
 
 release : ; $(G++) $(OBJS) -o $(APPNAME) $(LIBS)
 

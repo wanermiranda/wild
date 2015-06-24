@@ -1,0 +1,82 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!doctype html>
+
+<html>
+<head>
+<SCRIPT TYPE="text/javascript">
+<!--
+function popupform(myform, windowname)
+{
+if (! window.focus)return true;
+window.open('', windowname, 'height=400,width=500,top=100,left=300,scrollbars=yes');
+myform.target=windowname;
+return true;
+}
+//-->
+</SCRIPT>
+<title>Trabalho Prático 3 - ICV</title>
+
+<STYLE>
+
+body { COLOR:#FFF;FONT-FAMILY:arial;BACKGROUND:#7092be; }
+
+label { MARGIN:15px 0 5px 0;DISPLAY:block; }
+
+input[type="radio"] { MARGIN:0 5px 0 30px; }
+
+button { BORDER:0; BORDER-RADIUS:5px; MARGIN:20px auto 10px auto; PADDING:10px; FONT-WEIGHT:700; BACKGROUND:#FFF; DISPLAY:block; }
+
+.Quadro { 	BORDER:8px solid #FFF;
+			BORDER-RADIUS:5px;
+			WIDTH:450px;
+			MARGIN:100px auto 50px auto;
+			PADDING:0 20px;
+			DISPLAY:block }
+
+.Obs {	MARGIN:30px 0 0 0; FONT-SIZE:small; }
+
+.Assinatura { MARGIN:0 auto; TEXT-ALIGN:center; DISPLAY:block; }
+
+</STYLE>
+
+<link rel="shortcut icon" type="image/png" href="http://tp3icv.atspace.cc/favicon.png">
+<link rel="icon" type="image/png" href="http://tp3icv.atspace.cc/favicon.png">
+
+
+
+</head>
+<BODY>
+
+<DIV CLASS='Quadro'>
+
+<FORM METHOD='POST' ACTION='predictClass.php' ID='predict' enctype="multipart/form-data" onSubmit="popupform(this, 'join')">
+
+	<LABEL>Imagem:</LABEL>
+	<INPUT TYPE='file' ID='Imagem' NAME='Imagem' />
+
+	<LABEL>Descritor:</LABEL>
+		<DIV>
+		<INPUT TYPE='radio' ID='Descritor' NAME='Descritor' VALUE='bic' />
+		<SPAN>bic</SPAN></DIV>
+
+		<DIV>
+		<INPUT TYPE='radio' ID='Descritor' NAME='Descritor' VALUE='sasi' />
+		<SPAN>sasi</SPAN></DIV>
+
+		<DIV>
+		<INPUT TYPE='radio' ID='Descritor' NAME='Descritor' VALUE='eoac' />
+		<SPAN>eoac</SPAN></DIV>
+
+	<BUTTON>Enviar</BUTTON>
+
+	<DIV CLASS='Obs'>Obs: Para os descritores bic e Ich a imagem deve ser jpg e a máscara deve ser pgm. Para o unser, ambas imagens devem ser pgm.</DIV>
+</FORM>
+
+</DIV>
+
+
+<P CLASS='Assinatura'>Trabalho Prático 3 - ICV</P>
+<P CLASS='Assinatura'>Ruth Keglevich de Buzin (ruth@gmail.com)</P>
+<P CLASS='Assinatura'>Waner Miranda (waner@dcc.ufmg.br)</P>
+</BODY>
