@@ -16,14 +16,11 @@
 #include "ml.h"
 #include "highgui.h"
 
+#include "include/descriptors_helper.hpp"
+
 using namespace cv;
 using namespace std;
 
-const int num_class = 8;
-const int tm_train = 2624;
-const int tm_valid = 656;
-const string names[8] = { "apple", "car", "cow", "cup", "dog", "horse", "pear",
-		"tomato" };
 
 template<typename T>
 string to_string(T value) {
@@ -32,124 +29,6 @@ string to_string(T value) {
 	return os.str();
 }
 
-/* -------------------------------------------------------------------------------------
- Split the line into filename and class
- line = string containing the line data, formatted as filename#class
- descriptor = descriptor name
- returns = 2 position vector of string, first the file and then the class
- -------------------------------------------------------------------------------------*/
-vector<string> getFileNameClass(string line, string descriptor) {
-	string delimiter = "#";
-	vector<string> results;
-	size_t pos = 0;
-	std::string token;
-	if ((pos = line.find(delimiter)) != string::npos) {
-		token = line.substr(0, pos);
-		token.replace(token.find("descriptor"), 10, descriptor);
-		results.push_back(token);
-		line.erase(0, pos + delimiter.length());
-		results.push_back(line);
-	}
-	return results;
-}
-
-/* -------------------------------------------------------------------------------------
- Read the first position of the descriptor file, getting the
- filename = the file path for the feature vector byte set
- returns = the feature vector size
- -------------------------------------------------------------------------------------*/
-
-int ReadFileFeatureVector1DBinSize(const char *filename) {
-	int n;
-	FILE *f;
-	if ((f = fopen(filename, "rb")) == NULL) {
-		printf("Read Bin Size, error opening: %s\n", filename);
-		exit(0);
-	}
-	fread(&n, sizeof(int), 1, f);
-
-	fclose(f);
-	return n;
-}
-
-int *ReadFileFv1DBinChar(const char *filename) {
-	int i, nbins;
-	FILE *fp;
-	uchar c;
-
-	fp = fopen(filename, "r");
-	if (fp == NULL) {
-		printf("Read Vector Char, error opening: %s\n", filename);
-		exit(-1);
-	}
-
-	fscanf(fp, "%d\n", &nbins);
-	int *results = (int *) malloc(sizeof(int) * nbins);
-
-	for (i = 0; i < nbins; i++) {
-		fscanf(fp, "%c", &c);
-		results[i] = c - '0';
-	}
-	fclose(fp);
-
-	return results;
-}
-/* -------------------------------------------------------------------------------------
- Read the feature vector from the file
- filename  = the file path for the feature vector byte set
- returns = A array of double
- -------------------------------------------------------------------------------------*/
-
-double *ReadFileFv1DBinDouble(const char *filename) {
-	int n;
-	FILE *f;
-	if ((f = fopen(filename, "rb")) == NULL) {
-		printf("Read Vector Double, error opening: %s\n", filename);
-		exit(0);
-	}
-	fread(&n, sizeof(int), 1, f);
-
-	double *fv = (double *) malloc(sizeof(double) * n);
-
-	fread(fv, sizeof(double), n, f);
-	fclose(f);
-
-	return fv;
-}
-
-float *ReadFileFv1DBinFloat(const char *filename) {
-	int n;
-	FILE *f;
-	if ((f = fopen(filename, "rb")) == NULL) {
-		printf("Read Vector Float, error opening: %s\n", filename);
-		exit(0);
-	}
-	fread(&n, sizeof(int), 1, f);
-
-	float *fv = (float *) malloc(sizeof(float) * n);
-
-	fread(fv, sizeof(float), n, f);
-	fclose(f);
-
-	return fv;
-}
-
-int ReadFvChar1DBinSize(const char *filename) {
-	int nbins;
-	FILE *fp;
-
-	fp = fopen(filename, "r");
-	if (fp == NULL) {
-		printf("Read Vector Char, error opening: %s\n", filename);
-		exit(-1);
-	}
-
-	fscanf(fp, "%d\n", &nbins);
-
-	fclose(fp);
-
-	return nbins;
-}
 
 /* -------------------------------------------------------------------------------------
  Build the matrix data training, configurate and performs the SVM train.
@@ -245,6 +124,8 @@ void train_svm(string s_trainset_file, const char * s_dir_svm,
 	ifs.close();
 }
 
+
+
 /* -------------------------------------------------------------------------------------
  Executes the valition based on the saved state
  s_validset_file   = dataset for validation
@@ -293,33 +174,7 @@ void valid_svm(string s_validset_file, const char * s_dir_svm,
 		file_class = getFileNameClass(line, descriptor);
 		class_id = atoi(file_class[1].c_str());
 
-		Mat predict(1, bin_size, CV_32FC1);
-		// Some descriptors are written using float, instead of double.
-		if (descriptor.compare("sasi") == 0) {
-			double *fv_double;
-			fv_double = ReadFileFv1DBinDouble(file_class[0].c_str());
-			for (int i = 0; i < bin_size; i++) {
-				predict.at<float>(0, i) = fv_double[i];
-			}
-			free(fv_double);
-		} else if (descriptor.compare("eoac") == 0) {
-			float *fv_float;
-			fv_float = ReadFileFv1DBinFloat(file_class[0].c_str());
-			for (int i = 0; i < bin_size; i++) {
-				predict.at<float>(0, i) = fv_float[i];
-			}
-			free(fv_float);
-		} else if (descriptor.compare("bic") == 0) {
-			int *fv_int;
-			fv_int = ReadFileFv1DBinChar(file_class[0].c_str());
-			for (int i = 0; i < bin_size; i++) {
-				predict.at<float>(0, i) = fv_int[i];
-			}
-			free(fv_int);
-		}
-
-		float result = svm.predict(predict);
-
+		float result = predict(bin_size, descriptor, file_class[0].c_str(), svm);
 		fresult << names[class_id] << " = " << names[(int) result] << "\n";
 	}
 
