@@ -29,6 +29,10 @@ string to_string(T value) {
 	return os.str();
 }
 
+std::string base_name(std::string const & path)
+{
+  return path.substr(path.find_last_of("/\\") + 1);
+}
 
 /* -------------------------------------------------------------------------------------
  Build the matrix data training, configurate and performs the SVM train.
@@ -50,7 +54,7 @@ void train_svm(string s_trainset_file, const char * s_dir_svm,
 	string svm_state_file(s_dir_svm);
 
 	svm_state_file.append("/");
-	svm_state_file.append(s_trainset_file);
+	svm_state_file.append(base_name(s_trainset_file));
 	svm_state_file.replace(svm_state_file.find(".set"), 4,
 			"." + descriptor + ".xml");
 
@@ -140,7 +144,7 @@ void valid_svm(string s_validset_file, const char * s_dir_svm,
 	ifstream ifs(s_validset_file.c_str());
 	ofstream fresult;
 	s_dir_result.append("/");
-	s_dir_result.append(s_validset_file);
+	s_dir_result.append(base_name(s_validset_file));
 	s_dir_result.replace(s_dir_result.find(".set"), 4,
 			"." + descriptor + ".res");
 
@@ -151,11 +155,11 @@ void valid_svm(string s_validset_file, const char * s_dir_svm,
 	int class_id;
 	string svm_state_file(s_dir_svm);
 
-	svm_state_file.append("/");
-	svm_state_file.append(s_validset_file);
-	svm_state_file.replace(svm_state_file.find(".set"), 4,
-			"." + descriptor + ".xml");
-	svm_state_file.replace(svm_state_file.find("test"), 4, "train");
+//	svm_state_file.append("/");
+//	svm_state_file.append(s_validset_file);
+//	svm_state_file.replace(svm_state_file.find(".set"), 4,
+//			"." + descriptor + ".xml");
+//	svm_state_file.replace(svm_state_file.find("test"), 4, "train");
 
 	// Grabbing the first record data to create the dataset in Opencv and set some constant values
 	if (std::getline(ifs, line)) {

@@ -5,7 +5,7 @@ then
     exit 1
 fi
 
-cat dataset.txt | while read file
+cat $2 | while read file
 do
     #define filename wihtout \n 
     file=$(echo $file | sed "s/\n//g")

@@ -8,7 +8,7 @@ import numpy as np
 
 
 # classes apple,car,cow,cup,dog,horse,pear,tomato
-
+          
 classes = ["apple", "car", "cow", "cup", "dog", "horse", "pear","tomato"]
 methods = ["bic", "sasi", "eoac"]
 
